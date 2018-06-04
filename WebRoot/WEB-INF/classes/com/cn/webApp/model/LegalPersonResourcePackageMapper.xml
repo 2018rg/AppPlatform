@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.ILegalPersonResourcePackageDao">
+	<resultMap id="LegalPersonResourcePackageMap"
+		type="com.cn.webApp.model.LegalPersonResourcePackage">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="resourcepackageid" property="resourcepackageid"
+			jdbcType="VARCHAR" />
+		<result column="CUSTOMERUNITCODE" property="customerunitcode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="LegalPersonResourcePackageList"
+		type="java.util.HashMap">
+		<result column="a.resourcepackagename" property="resourcepackagename" />
+		<result column="b.resourcepackageid" property="resourcepackageid" />
+		<result column="b.customerunitcode" property="customerunitcode" />
+	</resultMap>
+	<!-- 查询租户对应授权资源包信息 -->
+	<select id="queryList" resultMap="LegalPersonResourcePackageList" resultType="list">
+	SELECT b.customerunitcode,b.resourcepackageid,a.resourcepackagename FROM app_legal_person_resourcepackage b left JOIN app_resourcepackage a ON b.resourcepackageid=a.id;
+	</select>
+	<!-- 根据租户号查询当前租户被授权的资源包信息 -->
+	<select id="queryByCode" resultMap="LegalPersonResourcePackageMap" resultType="list" parameterType="java.lang.String">
+	select * from app_legal_person_resourcepackage where customerunitcode= #{customerunitcode,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByPrimaryKey" resultMap="LegalPersonResourcePackageMap"
+		parameterType="java.lang.String">
+		select *
+		from app_legal_person_resourcepackage
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据租户号删除当前租户的租户-资源包对应关系 -->
+	<delete id="delByCode" parameterType="java.lang.String">
+		delete from app_legal_person_resourcepackage
+		where customerunitcode = #{customerunitcode,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from app_legal_person_resourcepackage
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.LegalPersonResourcePackage">
+		insert into app_legal_person_resourcepackage (ID, resourcepackageid,
+		CUSTOMERUNITCODE
+		)
+		values (#{id,jdbcType=VARCHAR}, #{resourcepackageid,jdbcType=VARCHAR},
+		#{customerunitcode,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.LegalPersonResourcePackage">
+		insert into app_legal_person_resourcepackage
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="resourcepackageid != null">
+				resourcepackageid,
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="resourcepackageid != null">
+				#{resourcepackageid,jdbcType=VARCHAR},
+			</if>
+			<if test="customerunitcode != null">
+				#{customerunitcode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.LegalPersonResourcePackage">
+		update app_legal_person_resourcepackage
+		<set>
+			<if test="resourcepackageid != null">
+				resourcepackageid = #{resourcepackageid,jdbcType=VARCHAR},
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.LegalPersonResourcePackage">
+		update app_legal_person_resourcepackage
+		set resourcepackageid = #{resourcepackageid,jdbcType=VARCHAR},
+		CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

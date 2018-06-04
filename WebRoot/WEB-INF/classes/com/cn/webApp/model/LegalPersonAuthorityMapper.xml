@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.ILegalPersonAuthorityDao" >
+  <resultMap id="LegalPersonAuthorityMap" type="com.cn.webApp.model.LegalPersonAuthority" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="CUSTOMERUNITCODE" property="customerunitcode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_LegalPersonAuthority_List" >
+    ID, END_TIME, CUSTOMERUNITCODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="LegalPersonAuthorityMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_LegalPersonAuthority_List" />
+    from base_legal_person_authority
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getPermitDate" resultMap="LegalPersonAuthorityMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_LegalPersonAuthority_List" />
+    from base_legal_person_authority
+    where CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_legal_person_authority
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cn.webApp.model.LegalPersonAuthority" >
+    insert into base_legal_person_authority (ID, END_TIME, CUSTOMERUNITCODE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{endTime,jdbcType=TIMESTAMP}, #{customerunitcode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.webApp.model.LegalPersonAuthority" >
+    insert into base_legal_person_authority
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="customerunitcode != null" >
+        CUSTOMERUNITCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerunitcode != null" >
+        #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.LegalPersonAuthority" >
+    update base_legal_person_authority
+    <set >
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerunitcode != null" >
+        CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.LegalPersonAuthority" >
+    update base_legal_person_authority
+    set END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

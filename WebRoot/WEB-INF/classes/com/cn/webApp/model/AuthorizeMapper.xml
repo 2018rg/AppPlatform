@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IAuthorizeDao" >
+  <resultMap id="AuthorizeMap" type="com.cn.webApp.model.Authorize" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="AUTH_TYPE" property="authType" jdbcType="VARCHAR" />
+    <result column="AUTH_ID" property="authId" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="DECIMAL" />
+    <result column="END_TIME" property="endTime" jdbcType="DECIMAL" />
+    <result column="VALIDATE_CODE" property="validateCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Authorize_List" >
+    ID, AUTH_TYPE, AUTH_ID, START_TIME, END_TIME, VALIDATE_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="AuthorizeMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Authorize_List" />
+    from base_authorize
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="selectBySelective" resultMap="AuthorizeMap" parameterType="java.lang.String" resultType="list">
+    select 
+    <include refid="Base_Authorize_List" />
+    from base_authorize
+     where 1=1 
+    <if test="id != null" >
+       and ID = #{id,jdbcType=INTEGER} 
+     </if>
+    <if test="authType != null" >
+       and AUTH_TYPE = #{authType,jdbcType=VARCHAR} 
+     </if>
+     <if test="authId != null" >
+       and AUTH_ID = #{authId,jdbcType=VARCHAR} 
+     </if>
+     <if test="startTime != null" >
+       and START_TIME = #{startTime,jdbcType=DECIMAL} 
+     </if>
+     <if test="endTime != null" >
+       and END_TIME = #{endTime,jdbcType=DECIMAL} 
+     </if>
+     <if test="validateCode != null" >
+       and VALIDATE_CODE = #{validateCode,jdbcType=VARCHAR} 
+     </if>
+  </select>
+  <!-- 获取所有对象 -->
+  <select id="getAll" resultMap="AuthorizeMap" parameterType="java.lang.String" resultType="list">
+    select 
+    <include refid="Base_Authorize_List" />
+    from base_authorize
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_authorize
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cn.webApp.model.Authorize" >
+    insert into base_authorize (ID, AUTH_TYPE, AUTH_ID, 
+      START_TIME, END_TIME, VALIDATE_CODE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{authType,jdbcType=VARCHAR}, #{authId,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=DECIMAL}, #{endTime,jdbcType=DECIMAL}, #{validateCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.webApp.model.Authorize" >
+    insert into base_authorize
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="authType != null" >
+        AUTH_TYPE,
+      </if>
+      <if test="authId != null" >
+        AUTH_ID,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="validateCode != null" >
+        VALIDATE_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="authType != null" >
+        #{authType,jdbcType=VARCHAR},
+      </if>
+      <if test="authId != null" >
+        #{authId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=DECIMAL},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=DECIMAL},
+      </if>
+      <if test="validateCode != null" >
+        #{validateCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.Authorize" >
+    update base_authorize
+    <set >
+      <if test="authType != null" >
+        AUTH_TYPE = #{authType,jdbcType=VARCHAR},
+      </if>
+      <if test="authId != null" >
+        AUTH_ID = #{authId,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=DECIMAL},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=DECIMAL},
+      </if>
+      <if test="validateCode != null" >
+        VALIDATE_CODE = #{validateCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.Authorize" >
+    update base_authorize
+    set AUTH_TYPE = #{authType,jdbcType=VARCHAR},
+      AUTH_ID = #{authId,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=DECIMAL},
+      END_TIME = #{endTime,jdbcType=DECIMAL},
+      VALIDATE_CODE = #{validateCode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

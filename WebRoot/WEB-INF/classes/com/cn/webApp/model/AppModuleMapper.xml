@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IAppModuleDao">
+	<resultMap id="AppModuleMap" type="com.cn.webApp.model.AppModule">
+		<id column="MODULEID" property="moduleid" jdbcType="VARCHAR" />
+		<result column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="MODULECODE" property="modulecode" jdbcType="VARCHAR" />
+		<result column="MODULENAME" property="modulename" jdbcType="VARCHAR" />
+		<result column="LIMITNUM" property="limitnum" jdbcType="INTEGER" />
+		<result column="LIMITDT" property="limitdt" jdbcType="TIMESTAMP" />
+		<result column="REDITDT" property="reditdt" jdbcType="TIMESTAMP" />
+		<result column="REDITASN" property="reditasn" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="APPTYPE" property="apptype" jdbcType="VARCHAR" />
+		<result column="OPDT" property="opdt" jdbcType="TIMESTAMP" />
+		<result column="SYSCODE" property="syscode" jdbcType="VARCHAR" />
+		<result column="APPID" property="appid" jdbcType="VARCHAR" />
+		<result column="SORTID" property="sortid" jdbcType="DOUBLE" />
+		<result column="REGCODE" property="regcode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="AppModuleList" type="java.util.HashMap">
+		<result column="MODULENAME" property="modulename" />
+		<result column="LIMITNUM" property="limitnum" />
+		<result column="LIMITDT" property="limitdt" />
+		<result column="cuscount" property="cuscount" />
+	</resultMap>
+
+	<resultMap id="AppModuleMapWithBLOBs" type="com.cn.webApp.model.AppModule"
+		extends="AppModuleMap">
+		<result column="REDITEDCODE" property="reditedcode" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_AppModule_List">
+		mm.MODULEID, mm.ID, mm.MODULECODE, mm.MODULENAME,
+		mm.LIMITNUM, mm.LIMITDT, mm.REDITDT, mm.REDITASN,
+		mm.DESCRIPTION,
+		mm.APPTYPE, mm.OPDT, mm.SYSCODE, mm.APPID, mm.SORTID, mm.REGCODE
+	</sql>
+	<sql id="Blob_AppModule_List">
+		mm.REDITEDCODE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="AppModuleMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_AppModule_List" />
+		,
+		<include refid="Blob_AppModule_List" />
+		from base_app_module mm
+		where MODULEID = #{moduleid,jdbcType=VARCHAR}
+	</select>
+<!-- 根据appid获取对应模块的信息以及当前已接入数 -->
+	<select id="queryByAppid" resultMap="AppModuleList"
+		parameterType="java.lang.String" resultType="list">
+		select
+		b.modulename,b.limitnum,b.LIMITDT,
+		(select count(distinct (c.customerunitcode)) from BASE_LEGAL_PERSON_MODULE c
+		,base_legal_person q
+		where q.customerunitcode = c.customerunitcode and c.appmodelid = a.moduleid
+		and q.isdelete = 0 ) cusCount
+		from base_appmodule a, base_app_module b
+		where a.moduleid = b.moduleid
+		and a.appid = #{appid,jdbcType=VARCHAR}
+	</select>
+	<!--获得被授权的模块信息 -->
+	<select id="selectByBusinessAppredit" resultMap="AppModuleMapWithBLOBs">
+		select
+		<include refid="Base_AppModule_List" />
+		,
+		<include refid="Blob_AppModule_List" />
+		from base_appmodule rel right join base_app_module mm on
+		rel.moduleid=mm.moduleid where rel.moduleid in(SELECT AUTH_ID FROM
+		BASE_AUTHORIZE WHERE AUTH_TYPE = 'module')
+		AND rel.appid in(SELECT
+		APPID from base_app_redit where APPTYPE=0 and
+		APPID in (SELECT AUTH_ID
+		from base_authorize))
+	</select>
+	<!-- 根据base_appmodule查询 base_app_module中所有模块的信息 -->
+	<select id="findModuleByStandard" resultMap="AppModuleMapWithBLOBs" resultType="list" parameterType="java.lang.String">
+	select mm.* from  base_appmodule  rel  right join  base_app_module  mm  on  rel.moduleid=mm.moduleid  
+			where rel.appid in (  select distinct d.APPID from base_appmodule c left join base_app_redit d on c.appid = d.appid
+		 where c.moduleid in (select b.moduleid from base_appmodule b left join base_app_redit a
+		 on a.appid = b.appid WHERE a.appid =#{appid jdbcType=VARCHAR})
+		 and d.apptype = 0) and rel.moduleid in ( select uu.moduleid from base_appmodule uu where uu.appid=#{appid jdbcType=VARCHAR})
+	</select>
+	<!-- 根据customerunitcode查询当前租户被授权的模块信息 -->
+		<select id="findBaseModule" resultMap="AppModuleMapWithBLOBs" resultType="list" parameterType="java.lang.String">
+	select mm.*
+ from base_legal_person_module blp  left join  base_appmodule rel  on blp.appmodelid =rel.moduleid
+		 right join base_app_module mm  on rel.moduleid = mm.moduleid and blp.customerunitcode=#{customerunitcode jdbcType=VARCHAR}
+ where rel.appid =(SELECT APPID from  base_app_redit where 
+    APPID= (select distinct(q.APPID) from base_legal_person_module q  where q.customerunitcode=#{customerunitcode jdbcType=VARCHAR}))
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		base_app_module
+		where MODULEID = #{moduleid,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.AppModule">
+		insert into base_app_module
+		(MODULEID, ID, MODULECODE,
+		MODULENAME, LIMITNUM, LIMITDT,
+		REDITDT,
+		REDITASN, DESCRIPTION,
+		APPTYPE, OPDT, SYSCODE,
+		APPID, SORTID, REGCODE,
+		REDITEDCODE)
+		values (#{moduleid,jdbcType=VARCHAR},
+		#{id,jdbcType=VARCHAR},
+		#{modulecode,jdbcType=VARCHAR},
+		#{modulename,jdbcType=VARCHAR}, #{limitnum,jdbcType=INTEGER},
+		#{limitdt,jdbcType=TIMESTAMP},
+		#{reditdt,jdbcType=TIMESTAMP},
+		#{reditasn,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{apptype,jdbcType=VARCHAR}, #{opdt,jdbcType=TIMESTAMP},
+		#{syscode,jdbcType=VARCHAR},
+		#{appid,jdbcType=VARCHAR},
+		#{sortid,jdbcType=DOUBLE},
+		#{regcode,jdbcType=VARCHAR},
+		#{reditedcode,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.AppModule">
+		insert into base_app_module
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="moduleid != null">
+				MODULEID,
+			</if>
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="modulecode != null">
+				MODULECODE,
+			</if>
+			<if test="modulename != null">
+				MODULENAME,
+			</if>
+			<if test="limitnum != null">
+				LIMITNUM,
+			</if>
+			<if test="limitdt != null">
+				LIMITDT,
+			</if>
+			<if test="reditdt != null">
+				REDITDT,
+			</if>
+			<if test="reditasn != null">
+				REDITASN,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="apptype != null">
+				APPTYPE,
+			</if>
+			<if test="opdt != null">
+				OPDT,
+			</if>
+			<if test="syscode != null">
+				SYSCODE,
+			</if>
+			<if test="appid != null">
+				APPID,
+			</if>
+			<if test="sortid != null">
+				SORTID,
+			</if>
+			<if test="regcode != null">
+				REGCODE,
+			</if>
+			<if test="reditedcode != null">
+				REDITEDCODE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="moduleid != null">
+				#{moduleid,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="modulecode != null">
+				#{modulecode,jdbcType=VARCHAR},
+			</if>
+			<if test="modulename != null">
+				#{modulename,jdbcType=VARCHAR},
+			</if>
+			<if test="limitnum != null">
+				#{limitnum,jdbcType=INTEGER},
+			</if>
+			<if test="limitdt != null">
+				#{limitdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reditdt != null">
+				#{reditdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reditasn != null">
+				#{reditasn,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="apptype != null">
+				#{apptype,jdbcType=VARCHAR},
+			</if>
+			<if test="opdt != null">
+				#{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="syscode != null">
+				#{syscode,jdbcType=VARCHAR},
+			</if>
+			<if test="appid != null">
+				#{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="sortid != null">
+				#{sortid,jdbcType=DOUBLE},
+			</if>
+			<if test="regcode != null">
+				#{regcode,jdbcType=VARCHAR},
+			</if>
+			<if test="reditedcode != null">
+				#{reditedcode,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.AppModule">
+		update base_app_module
+		<set>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR},
+			</if>
+			<if test="modulecode != null">
+				MODULECODE = #{modulecode,jdbcType=VARCHAR},
+			</if>
+			<if test="modulename != null">
+				MODULENAME = #{modulename,jdbcType=VARCHAR},
+			</if>
+			<if test="limitnum != null">
+				LIMITNUM = #{limitnum,jdbcType=INTEGER},
+			</if>
+			<if test="limitdt != null">
+				LIMITDT = #{limitdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reditdt != null">
+				REDITDT = #{reditdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="reditasn != null">
+				REDITASN = #{reditasn,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="apptype != null">
+				APPTYPE = #{apptype,jdbcType=VARCHAR},
+			</if>
+			<if test="opdt != null">
+				OPDT = #{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="syscode != null">
+				SYSCODE = #{syscode,jdbcType=VARCHAR},
+			</if>
+			<if test="appid != null">
+				APPID = #{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="sortid != null">
+				SORTID = #{sortid,jdbcType=DOUBLE},
+			</if>
+			<if test="regcode != null">
+				REGCODE = #{regcode,jdbcType=VARCHAR},
+			</if>
+			<if test="reditedcode != null">
+				REDITEDCODE = #{reditedcode,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where MODULEID = #{moduleid,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cn.webApp.model.AppModule">
+		update
+		base_app_module
+		set ID = #{id,jdbcType=VARCHAR},
+		MODULECODE =
+		#{modulecode,jdbcType=VARCHAR},
+		MODULENAME =
+		#{modulename,jdbcType=VARCHAR},
+		LIMITNUM =
+		#{limitnum,jdbcType=INTEGER},
+		LIMITDT = #{limitdt,jdbcType=TIMESTAMP},
+		REDITDT = #{reditdt,jdbcType=TIMESTAMP},
+		REDITASN =
+		#{reditasn,jdbcType=VARCHAR},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR},
+		APPTYPE = #{apptype,jdbcType=VARCHAR},
+		OPDT = #{opdt,jdbcType=TIMESTAMP},
+		SYSCODE =
+		#{syscode,jdbcType=VARCHAR},
+		APPID = #{appid,jdbcType=VARCHAR},
+		SORTID =
+		#{sortid,jdbcType=DOUBLE},
+		REGCODE = #{regcode,jdbcType=VARCHAR},
+		REDITEDCODE = #{reditedcode,jdbcType=LONGVARCHAR}
+		where MODULEID =
+		#{moduleid,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.AppModule">
+		update
+		base_app_module
+		set ID = #{id,jdbcType=VARCHAR},
+		MODULECODE =
+		#{modulecode,jdbcType=VARCHAR},
+		MODULENAME =
+		#{modulename,jdbcType=VARCHAR},
+		LIMITNUM =
+		#{limitnum,jdbcType=INTEGER},
+		LIMITDT = #{limitdt,jdbcType=TIMESTAMP},
+		REDITDT = #{reditdt,jdbcType=TIMESTAMP},
+		REDITASN =
+		#{reditasn,jdbcType=VARCHAR},
+		DESCRIPTION =
+		#{description,jdbcType=VARCHAR},
+		APPTYPE = #{apptype,jdbcType=VARCHAR},
+		OPDT = #{opdt,jdbcType=TIMESTAMP},
+		SYSCODE =
+		#{syscode,jdbcType=VARCHAR},
+		APPID = #{appid,jdbcType=VARCHAR},
+		SORTID =
+		#{sortid,jdbcType=DOUBLE},
+		REGCODE = #{regcode,jdbcType=VARCHAR}
+		where
+		MODULEID = #{moduleid,jdbcType=VARCHAR}
+	</update>
+</mapper>
