@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IUserDao">
+	<resultMap id="UserMap" type="com.cn.webApp.model.User">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="EMPCODE" property="empcode" jdbcType="VARCHAR" />
+		<result column="EMPPWD" property="emppwd" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="NATION" property="nation" jdbcType="VARCHAR" />
+		<result column="CERTIFICATEID" property="certificateid"
+			jdbcType="DECIMAL" />
+		<result column="IDCARDNO" property="idcardno" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR" />
+		<result column="EMPSTATE" property="empstate" jdbcType="DECIMAL" />
+		<result column="OPDT" property="opdt" jdbcType="TIMESTAMP" />
+		<result column="ISDELETE" property="isdelete" jdbcType="DECIMAL" />
+		<result column="EMPID" property="empid" jdbcType="DECIMAL" />
+		<result column="CUSTOMERUNITCODE" property="customerunitcode"
+			jdbcType="VARCHAR" />
+		<result column="LOGLIMIT" property="loglimit" jdbcType="INTEGER" />
+		<result column="ROLEID" property="roleid" jdbcType="VARCHAR" />
+		<result column="ROLETYPE" property="roletype" jdbcType="CHAR" />
+		<result column="ISADMIN" property="isadmin" jdbcType="INTEGER" />
+		<result column="ISMASTER" property="ismaster" jdbcType="INTEGER" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="User_List">
+		ID, EMPCODE, EMPPWD, SEX, NAME, NATION, CERTIFICATEID,
+		IDCARDNO, EMAIL,
+		TELEPHONE,
+		EMPSTATE, OPDT, ISDELETE, EMPID,
+		CUSTOMERUNITCODE, LOGLIMIT, ROLEID, ROLETYPE,
+		ISADMIN,
+		ISMASTER, VERSION
+	</sql>
+	<!-- 分页查询 Mysql -->
+	<select id="queryUserPage" parameterType="map" resultType="list"
+		resultMap="UserMap">
+		select * from base_user
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="empcode != null">
+				and EMPCODE = #{empcode,jdbcType=VARCHAR}
+			</if>
+			<if test="emppwd != null">
+				and EMPPWD = #{emppwd,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null">
+				and SEX = #{sex,jdbcType=DECIMAL}
+			</if>
+			<if test="name != null">
+				and NAME = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="nation != null">
+				and NATION = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="certificateid != null">
+				and CERTIFICATEID = #{certificateid,jdbcType=DECIMAL}
+			</if>
+			<if test="idcardno != null">
+				and IDCARDNO = #{idcardno,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and EMAIL = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="telephone != null">
+				and TELEPHONE = #{telephone,jdbcType=VARCHAR}
+			</if>
+			<if test="empstate != null">
+				and EMPSTATE = #{empstate,jdbcType=DECIMAL}
+			</if>
+			<if test="opdt != null">
+				and OPDT = #{opdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="isdelete != null">
+				and ISDELETE = #{isdelete,jdbcType=DECIMAL}
+			</if>
+			<if test="empid != null">
+				and EMPID = #{empid,jdbcType=DECIMAL}
+			</if>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE =
+				#{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="loglimit != null">
+				and LOGLIMIT = #{loglimit,jdbcType=INTEGER}
+			</if>
+			<if test="roleid != null">
+				and ROLEID = #{roleid,jdbcType=VARCHAR}
+			</if>
+			<if test="roletype != null">
+				and ROLETYPE = #{roletype,jdbcType=CHAR}
+			</if>
+			<if test="isadmin != null">
+				and ISADMIN = #{isadmin,jdbcType=INTEGER}
+			</if>
+			<if test="ismaster != null">
+				and ISMASTER = #{ismaster,jdbcType=INTEGER}
+			</if>
+			<if test="ver != null">
+				and VER = #{ver,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by ${orderName} ${descAsc}
+		<if test="startIndex != null and startIndex != ''">
+			limit ${startIndex},
+		</if>
+		<if test="startIndex == null or startIndex == ''">
+			limit 0,
+		</if>
+		<if test="endIndex != null and endIndex != ''">
+			${endIndex}
+		</if>
+	</select>
+
+	<select id="queryUserCount" parameterType="com.cn.webApp.model.User"
+		resultType="long">
+		select count(*) from base_user
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="empcode != null">
+				and EMPCODE = #{empcode,jdbcType=VARCHAR}
+			</if>
+			<if test="emppwd != null">
+				and EMPPWD = #{emppwd,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null">
+				and SEX = #{sex,jdbcType=DECIMAL}
+			</if>
+			<if test="name != null">
+				and NAME = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="nation != null">
+				and NATION = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="certificateid != null">
+				and CERTIFICATEID = #{certificateid,jdbcType=DECIMAL}
+			</if>
+			<if test="idcardno != null">
+				and IDCARDNO = #{idcardno,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and EMAIL = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="telephone != null">
+				and TELEPHONE = #{telephone,jdbcType=VARCHAR}
+			</if>
+			<if test="empstate != null">
+				and EMPSTATE = #{empstate,jdbcType=DECIMAL}
+			</if>
+			<if test="opdt != null">
+				and OPDT = #{opdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="isdelete != null">
+				and ISDELETE = #{isdelete,jdbcType=DECIMAL}
+			</if>
+			<if test="empid != null">
+				and EMPID = #{empid,jdbcType=DECIMAL}
+			</if>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE =#{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="loglimit != null">
+				and LOGLIMIT = #{loglimit,jdbcType=INTEGER}
+			</if>
+			<if test="roleid != null">
+				and ROLEID = #{roleid,jdbcType=VARCHAR}
+			</if>
+			<if test="roletype != null">
+				and ROLETYPE = #{roletype,jdbcType=CHAR}
+			</if>
+			<if test="isadmin != null">
+				and ISADMIN = #{isadmin,jdbcType=INTEGER}
+			</if>
+			<if test="ismaster != null">
+				and ISMASTER = #{ismaster,jdbcType=INTEGER}
+			</if>
+			<if test="ver != null">
+				and VER = #{ver,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="UserMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="User_List" />
+		from base_user
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据  Customerunitcode 查询管理员用户 -->
+    <select id="selectByCustomerunitcode" resultMap="UserMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="User_List" />
+		from base_user
+		where CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+		and ISADMIN=1 and ISDELETE=0
+	</select>
+	
+	<select id="selectBySelective" resultMap="UserMap" resultType="list"
+		parameterType="java.lang.String">
+		select
+		<include refid="User_List" />
+		from base_user
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="empcode != null">
+				and EMPCODE = #{empcode,jdbcType=VARCHAR}
+			</if>
+			<if test="emppwd != null">
+				and EMPPWD = #{emppwd,jdbcType=VARCHAR}
+			</if>
+			<if test="sex != null">
+				and SEX = #{sex,jdbcType=DECIMAL}
+			</if>
+			<if test="name != null">
+				and NAME = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="nation != null">
+				and NATION = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="certificateid != null">
+				and CERTIFICATEID = #{certificateid,jdbcType=DECIMAL}
+			</if>
+			<if test="idcardno != null">
+				and IDCARDNO = #{idcardno,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and EMAIL = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="telephone != null">
+				and TELEPHONE = #{telephone,jdbcType=VARCHAR}
+			</if>
+			<if test="empstate != null">
+				and EMPSTATE = #{empstate,jdbcType=DECIMAL}
+			</if>
+			<if test="opdt != null">
+				and OPDT = #{opdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="isdelete != null">
+				and ISDELETE = #{isdelete,jdbcType=DECIMAL}
+			</if>
+			<if test="empid != null">
+				and EMPID = #{empid,jdbcType=DECIMAL}
+			</if>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE =
+				#{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="loglimit != null">
+				and LOGLIMIT = #{loglimit,jdbcType=INTEGER}
+			</if>
+			<if test="roleid != null">
+				and ROLEID = #{roleid,jdbcType=VARCHAR}
+			</if>
+			<if test="roletype != null">
+				and ROLETYPE = #{roletype,jdbcType=CHAR}
+			</if>
+			<if test="isadmin != null">
+				and ISADMIN = #{isadmin,jdbcType=INTEGER}
+			</if>
+			<if test="ismaster != null">
+				and ISMASTER = #{ismaster,jdbcType=INTEGER}
+			</if>
+			<if test="ver != null">
+				and VER = #{ver,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+    
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		base_user
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.User">
+		insert into base_user (ID,
+		EMPCODE, EMPPWD,
+		SEX, NAME, NATION,
+		CERTIFICATEID, IDCARDNO, EMAIL,
+		TELEPHONE, EMPSTATE, OPDT,
+		ISDELETE, EMPID, CUSTOMERUNITCODE,
+		LOGLIMIT,
+		ROLEID, ROLETYPE,
+		ISADMIN, ISMASTER, VER
+		)
+		values
+		(#{id,jdbcType=VARCHAR}, #{empcode,jdbcType=VARCHAR},
+		#{emppwd,jdbcType=VARCHAR},
+		#{sex,jdbcType=DECIMAL},
+		#{name,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR},
+		#{certificateid,jdbcType=DECIMAL}, #{idcardno,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{telephone,jdbcType=VARCHAR},
+		#{empstate,jdbcType=DECIMAL}, #{opdt,jdbcType=TIMESTAMP},
+		#{isdelete,jdbcType=DECIMAL}, #{empid,jdbcType=DECIMAL},
+		#{customerunitcode,jdbcType=VARCHAR},
+		#{loglimit,jdbcType=INTEGER},
+		#{roleid,jdbcType=VARCHAR}, #{roletype,jdbcType=CHAR},
+		#{isadmin,jdbcType=INTEGER}, #{ismaster,jdbcType=INTEGER},
+		#{ver,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.User">
+		insert into base_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="empcode != null">
+				EMPCODE,
+			</if>
+			<if test="emppwd != null">
+				EMPPWD,
+			</if>
+			<if test="sex != null">
+				SEX,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="nation != null">
+				NATION,
+			</if>
+			<if test="certificateid != null">
+				CERTIFICATEID,
+			</if>
+			<if test="idcardno != null">
+				IDCARDNO,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE,
+			</if>
+			<if test="empstate != null">
+				EMPSTATE,
+			</if>
+			<if test="opdt != null">
+				OPDT,
+			</if>
+			<if test="isdelete != null">
+				ISDELETE,
+			</if>
+			<if test="empid != null">
+				EMPID,
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE,
+			</if>
+			<if test="loglimit != null">
+				LOGLIMIT,
+			</if>
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+			<if test="roletype != null">
+				ROLETYPE,
+			</if>
+			<if test="isadmin != null">
+				ISADMIN,
+			</if>
+			<if test="ismaster != null">
+				ISMASTER,
+			</if>
+			<if test="ver != null">
+				VER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="empcode != null">
+				#{empcode,jdbcType=VARCHAR},
+			</if>
+			<if test="emppwd != null">
+				#{emppwd,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				#{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateid != null">
+				#{certificateid,jdbcType=DECIMAL},
+			</if>
+			<if test="idcardno != null">
+				#{idcardno,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="empstate != null">
+				#{empstate,jdbcType=DECIMAL},
+			</if>
+			<if test="opdt != null">
+				#{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isdelete != null">
+				#{isdelete,jdbcType=DECIMAL},
+			</if>
+			<if test="empid != null">
+				#{empid,jdbcType=DECIMAL},
+			</if>
+			<if test="customerunitcode != null">
+				#{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="loglimit != null">
+				#{loglimit,jdbcType=INTEGER},
+			</if>
+			<if test="roleid != null">
+				#{roleid,jdbcType=VARCHAR},
+			</if>
+			<if test="roletype != null">
+				#{roletype,jdbcType=CHAR},
+			</if>
+			<if test="isadmin != null">
+				#{isadmin,jdbcType=INTEGER},
+			</if>
+			<if test="ismaster != null">
+				#{ismaster,jdbcType=INTEGER},
+			</if>
+			<if test="ver != null">
+				#{ver,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.User">
+		update base_user
+		<set>
+			<if test="empcode != null">
+				EMPCODE = #{empcode,jdbcType=VARCHAR},
+			</if>
+			<if test="emppwd != null">
+				EMPPWD = #{emppwd,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				NATION = #{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="certificateid != null">
+				CERTIFICATEID = #{certificateid,jdbcType=DECIMAL},
+			</if>
+			<if test="idcardno != null">
+				IDCARDNO = #{idcardno,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				TELEPHONE = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="empstate != null">
+				EMPSTATE = #{empstate,jdbcType=DECIMAL},
+			</if>
+			<if test="opdt != null">
+				OPDT = #{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isdelete != null">
+				ISDELETE = #{isdelete,jdbcType=DECIMAL},
+			</if>
+			<if test="empid != null">
+				EMPID = #{empid,jdbcType=DECIMAL},
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="loglimit != null">
+				LOGLIMIT = #{loglimit,jdbcType=INTEGER},
+			</if>
+			<if test="roleid != null">
+				ROLEID = #{roleid,jdbcType=VARCHAR},
+			</if>
+			<if test="roletype != null">
+				ROLETYPE = #{roletype,jdbcType=CHAR},
+			</if>
+			<if test="isadmin != null">
+				ISADMIN = #{isadmin,jdbcType=INTEGER},
+			</if>
+			<if test="ismaster != null">
+				ISMASTER = #{ismaster,jdbcType=INTEGER},
+			</if>
+			<if test="ver != null">
+				VER = #{ver,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.User">
+		update base_user
+		set EMPCODE = #{empcode,jdbcType=VARCHAR},
+		EMPPWD =
+		#{emppwd,jdbcType=VARCHAR},
+		SEX = #{sex,jdbcType=DECIMAL},
+		NAME =
+		#{name,jdbcType=VARCHAR},
+		NATION = #{nation,jdbcType=VARCHAR},
+		CERTIFICATEID = #{certificateid,jdbcType=DECIMAL},
+		IDCARDNO =
+		#{idcardno,jdbcType=VARCHAR},
+		EMAIL = #{email,jdbcType=VARCHAR},
+		TELEPHONE = #{telephone,jdbcType=VARCHAR},
+		EMPSTATE =
+		#{empstate,jdbcType=DECIMAL},
+		OPDT = #{opdt,jdbcType=TIMESTAMP},
+		ISDELETE = #{isdelete,jdbcType=DECIMAL},
+		EMPID =
+		#{empid,jdbcType=DECIMAL},
+		CUSTOMERUNITCODE =
+		#{customerunitcode,jdbcType=VARCHAR},
+		LOGLIMIT =
+		#{loglimit,jdbcType=INTEGER},
+		ROLEID = #{roleid,jdbcType=VARCHAR},
+		ROLETYPE = #{roletype,jdbcType=CHAR},
+		ISADMIN =
+		#{isadmin,jdbcType=INTEGER},
+		ISMASTER = #{ismaster,jdbcType=INTEGER},
+		VER = #{ver,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

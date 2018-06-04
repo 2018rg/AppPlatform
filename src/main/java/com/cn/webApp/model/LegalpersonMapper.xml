@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.ILegalpersonDao">
+	<resultMap id="ILegalpersonMap" type="com.cn.webApp.model.Legalperson">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CUSTOMERUNITCODE" property="customerunitcode"
+			jdbcType="VARCHAR" />
+		<result column="CUSTOMERNAME" property="customername" jdbcType="VARCHAR" />
+		<result column="CUSTOMERNAMEJP" property="customernamejp"
+			jdbcType="VARCHAR" />
+		<result column="LINKMAN" property="linkman" jdbcType="VARCHAR" />
+		<result column="TELEPHONE" property="telephone" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="BANKCODE" property="bankcode" jdbcType="INTEGER" />
+		<result column="BANKCARDNO" property="bankcardno" jdbcType="VARCHAR" />
+		<result column="OPDT" property="opdt" jdbcType="TIMESTAMP" />
+		<result column="OPENDT" property="opendt" jdbcType="TIMESTAMP" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="ISDELETE" property="isdelete" jdbcType="INTEGER" />
+		<result column="ISBALANCE" property="isbalance" jdbcType="INTEGER" />
+		<result column="BANKCODENO" property="bankcodeno" jdbcType="VARCHAR" />
+		<result column="LIMITDT" property="limitdt" jdbcType="TIMESTAMP" />
+		<result column="WEBURL" property="weburl" jdbcType="VARCHAR" />
+		<result column="DATABASESTR" property="databasestr" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="LegalpersonMap" type="java.util.HashMap">
+		<id column="ID" property="id" />
+		<result column="CUSTOMERUNITCODE" property="customerunitcode" />
+		<result column="CUSTOMERNAME" property="customername" />
+		<result column="CUSTOMERNAMEJP" property="customernamejp" />
+		<result column="LINKMAN" property="linkman" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="ADDRESS" property="address" />
+		<result column="EMAIL" property="email" />
+		<result column="BANKCODE" property="bankcode" />
+		<result column="BANKCARDNO" property="bankcardno" />
+		<result column="OPDT" property="opdt" />
+		<result column="OPENDT" property="opendt" />
+		<result column="REMARK" property="remark" />
+		<result column="STATUS" property="status" />
+		<result column="ISDELETE" property="isdelete" />
+		<result column="ISBALANCE" property="isbalance" />
+		<result column="BANKCODENO" property="bankcodeno" />
+		<result column="LIMITDT" property="limitdt" />
+		<result column="WEBURL" property="weburl" />
+		<result column="DATABASESTR" property="databasestr" />
+		<result column="BANKNAME" property="bankname" />
+	</resultMap>
+	<sql id="ILegalperson_List">
+		ID, CUSTOMERUNITCODE, CUSTOMERNAME, CUSTOMERNAMEJP,
+		LINKMAN, TELEPHONE,
+		ADDRESS,
+		EMAIL, BANKCODE, BANKCARDNO, OPDT, OPENDT,
+		REMARK, STATUS, ISDELETE,
+		ISBALANCE, BANKCODENO,
+		LIMITDT, WEBURL,
+		DATABASESTR
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ILegalpersonMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="ILegalperson_List" />
+		from base_legal_person
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByAppId" resultMap="ILegalpersonMap"
+		parameterType="java.lang.String" resultType="list">
+		select distinct a.* from
+		base_legal_person a left join
+		BASE_LEGAL_PERSON_MODULE t
+		on
+		a.customerunitcode = t.customerunitcode
+		where t.appid
+		=#{appId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectNextCustCode" resultType="java.lang.String" >
+	SELECT max(CUSTOMERUNITCODE)+1 FROM base_legal_person ;
+	</select>
+
+	<select id="selectBySelectivePage" parameterType="map" resultMap="LegalpersonMap"
+		resultType="list">
+		select a.*,b.bankname from base_legal_person a
+		left join base_bank b on
+		a.bankcode=b.id
+		<where>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE =
+				#{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="customername != null">
+				and CUSTOMERNAME = #{customername,jdbcType=VARCHAR}
+			</if>
+			<if test="customernamejp != null">
+				and CUSTOMERNAMEJP = #{customernamejp,jdbcType=VARCHAR}
+			</if>
+			<if test="linkman != null">
+				and LINKMAN = #{linkman,jdbcType=VARCHAR}
+			</if>
+			<if test="telephone != null">
+				and TELEPHONE = #{telephone,jdbcType=VARCHAR}
+			</if>
+			<if test="address != null">
+				and ADDRESS = #{address,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and EMAIL = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="bankcardno != null">
+				and BANKCARDNO = #{bankcardno,jdbcType=VARCHAR}
+			</if>
+			<if test="opdt != null">
+				and OPDT = #{opdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="opendt != null">
+				and OPENDT = #{opendt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				and STATUS = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="isdelete != null">
+				and ISDELETE = #{isdelete,jdbcType=INTEGER}
+			</if>
+			<if test="isbalance != null">
+				and ISBALANCE = #{isbalance,jdbcType=INTEGER}
+			</if>
+			<if test="bankcodeno != null">
+				and BANKCODENO = #{bankcodeno,jdbcType=VARCHAR}
+			</if>
+			<if test="limitdt != null">
+				and LIMITDT = #{limitdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="weburl != null">
+				and WEBURL = #{weburl,jdbcType=VARCHAR}
+			</if>
+			<if test="databasestr != null">
+				and DATABASESTR = #{databasestr,jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by ${orderName} ${descAsc}
+		<if test="startIndex != null and startIndex != ''">
+			limit ${startIndex},
+		</if>
+		<if test="startIndex == null or startIndex == ''">
+			limit 0,
+		</if>
+		<if test="endIndex != null and endIndex != ''">
+			${endIndex}
+		</if>
+	</select>
+	<!-- 根据不同条件查询总数 -->
+	<select id="queryLegalpersonCount" resultType="long"
+		parameterType="com.cn.webApp.model.Legalperson">
+		select count(*) from base_legal_person
+		<where>
+			<if test="id != null">
+				ID = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE =
+				#{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="customername != null">
+				and CUSTOMERNAME = #{customername,jdbcType=VARCHAR}
+			</if>
+			<if test="customernamejp != null">
+				and CUSTOMERNAMEJP = #{customernamejp,jdbcType=VARCHAR}
+			</if>
+			<if test="linkman != null">
+				and LINKMAN = #{linkman,jdbcType=VARCHAR}
+			</if>
+			<if test="telephone != null">
+				and TELEPHONE = #{telephone,jdbcType=VARCHAR}
+			</if>
+			<if test="address != null">
+				and ADDRESS = #{address,jdbcType=VARCHAR}
+			</if>
+			<if test="email != null">
+				and EMAIL = #{email,jdbcType=VARCHAR}
+			</if>
+			<if test="bankcardno != null">
+				and BANKCARDNO = #{bankcardno,jdbcType=VARCHAR}
+			</if>
+			<if test="opdt != null">
+				and OPDT = #{opdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="opendt != null">
+				and OPENDT = #{opendt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				and STATUS = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="isdelete != null">
+				and ISDELETE = #{isdelete,jdbcType=INTEGER}
+			</if>
+			<if test="isbalance != null">
+				and ISBALANCE = #{isbalance,jdbcType=INTEGER}
+			</if>
+			<if test="bankcodeno != null">
+				and BANKCODENO = #{bankcodeno,jdbcType=VARCHAR}
+			</if>
+			<if test="limitdt != null">
+				and LIMITDT = #{limitdt,jdbcType=TIMESTAMP}
+			</if>
+			<if test="weburl != null">
+				and WEBURL = #{weburl,jdbcType=VARCHAR}
+			</if>
+			<if test="databasestr != null">
+				and DATABASESTR = #{databasestr,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+    <!-- 根据CUSTMERUNITCODE查询 -->
+	<select id="selectByCustomerunitcode" resultMap="ILegalpersonMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="ILegalperson_List" />
+		from base_legal_person
+		where CUSTOMERUNITCODE = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByCustomerunitcode" parameterType="java.lang.String">
+		delete from
+		base_legal_person
+		where CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		base_legal_person
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.Legalperson">
+		insert into base_legal_person
+		(ID, CUSTOMERUNITCODE, CUSTOMERNAME,
+		CUSTOMERNAMEJP, LINKMAN,
+		TELEPHONE,
+		ADDRESS, EMAIL, BANKCODE,
+		BANKCARDNO, OPDT, OPENDT,
+		REMARK,
+		STATUS, ISDELETE,
+		ISBALANCE, BANKCODENO, LIMITDT,
+		WEBURL, DATABASESTR)
+		values (#{id,jdbcType=VARCHAR}, #{customerunitcode,jdbcType=VARCHAR},
+		#{customername,jdbcType=VARCHAR},
+		#{customernamejp,jdbcType=VARCHAR},
+		#{linkman,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		#{bankcode,jdbcType=INTEGER},
+		#{bankcardno,jdbcType=VARCHAR},
+		#{opdt,jdbcType=TIMESTAMP}, #{opendt,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+		#{isdelete,jdbcType=INTEGER},
+		#{isbalance,jdbcType=INTEGER},
+		#{bankcodeno,jdbcType=VARCHAR}, #{limitdt,jdbcType=TIMESTAMP},
+		#{weburl,jdbcType=VARCHAR}, #{databasestr,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.Legalperson">
+		insert into base_legal_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE,
+			</if>
+			<if test="customername != null">
+				CUSTOMERNAME,
+			</if>
+			<if test="customernamejp != null">
+				CUSTOMERNAMEJP,
+			</if>
+			<if test="linkman != null">
+				LINKMAN,
+			</if>
+			<if test="telephone != null">
+				TELEPHONE,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="email != null">
+				EMAIL,
+			</if>
+			<if test="bankcode != null">
+				BANKCODE,
+			</if>
+			<if test="bankcardno != null">
+				BANKCARDNO,
+			</if>
+			<if test="opdt != null">
+				OPDT,
+			</if>
+			<if test="opendt != null">
+				OPENDT,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="isdelete != null">
+				ISDELETE,
+			</if>
+			<if test="isbalance != null">
+				ISBALANCE,
+			</if>
+			<if test="bankcodeno != null">
+				BANKCODENO,
+			</if>
+			<if test="limitdt != null">
+				LIMITDT,
+			</if>
+			<if test="weburl != null">
+				WEBURL,
+			</if>
+			<if test="databasestr != null">
+				DATABASESTR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="customerunitcode != null">
+				#{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="customername != null">
+				#{customername,jdbcType=VARCHAR},
+			</if>
+			<if test="customernamejp != null">
+				#{customernamejp,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				#{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="bankcode != null">
+				#{bankcode,jdbcType=INTEGER},
+			</if>
+			<if test="bankcardno != null">
+				#{bankcardno,jdbcType=VARCHAR},
+			</if>
+			<if test="opdt != null">
+				#{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="opendt != null">
+				#{opendt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="isdelete != null">
+				#{isdelete,jdbcType=INTEGER},
+			</if>
+			<if test="isbalance != null">
+				#{isbalance,jdbcType=INTEGER},
+			</if>
+			<if test="bankcodeno != null">
+				#{bankcodeno,jdbcType=VARCHAR},
+			</if>
+			<if test="limitdt != null">
+				#{limitdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="weburl != null">
+				#{weburl,jdbcType=VARCHAR},
+			</if>
+			<if test="databasestr != null">
+				#{databasestr,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.Legalperson">
+		update base_legal_person
+		<set>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="customername != null">
+				CUSTOMERNAME = #{customername,jdbcType=VARCHAR},
+			</if>
+			<if test="customernamejp != null">
+				CUSTOMERNAMEJP = #{customernamejp,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				LINKMAN = #{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				TELEPHONE = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				EMAIL = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="bankcode != null">
+				BANKCODE = #{bankcode,jdbcType=INTEGER},
+			</if>
+			<if test="bankcardno != null">
+				BANKCARDNO = #{bankcardno,jdbcType=VARCHAR},
+			</if>
+			<if test="opdt != null">
+				OPDT = #{opdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="opendt != null">
+				OPENDT = #{opendt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="isdelete != null">
+				ISDELETE = #{isdelete,jdbcType=INTEGER},
+			</if>
+			<if test="isbalance != null">
+				ISBALANCE = #{isbalance,jdbcType=INTEGER},
+			</if>
+			<if test="bankcodeno != null">
+				BANKCODENO = #{bankcodeno,jdbcType=VARCHAR},
+			</if>
+			<if test="limitdt != null">
+				LIMITDT = #{limitdt,jdbcType=TIMESTAMP},
+			</if>
+			<if test="weburl != null">
+				WEBURL = #{weburl,jdbcType=VARCHAR},
+			</if>
+			<if test="databasestr != null">
+				DATABASESTR = #{databasestr,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.Legalperson">
+		update
+		base_legal_person
+		set CUSTOMERUNITCODE =
+		#{customerunitcode,jdbcType=VARCHAR},
+		CUSTOMERNAME =
+		#{customername,jdbcType=VARCHAR},
+		CUSTOMERNAMEJP =
+		#{customernamejp,jdbcType=VARCHAR},
+		LINKMAN =
+		#{linkman,jdbcType=VARCHAR},
+		TELEPHONE = #{telephone,jdbcType=VARCHAR},
+		ADDRESS = #{address,jdbcType=VARCHAR},
+		EMAIL =
+		#{email,jdbcType=VARCHAR},
+		BANKCODE = #{bankcode,jdbcType=INTEGER},
+		BANKCARDNO = #{bankcardno,jdbcType=VARCHAR},
+		OPDT =
+		#{opdt,jdbcType=TIMESTAMP},
+		OPENDT = #{opendt,jdbcType=TIMESTAMP},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		STATUS =
+		#{status,jdbcType=INTEGER},
+		ISDELETE = #{isdelete,jdbcType=INTEGER},
+		ISBALANCE = #{isbalance,jdbcType=INTEGER},
+		BANKCODENO =
+		#{bankcodeno,jdbcType=VARCHAR},
+		LIMITDT =
+		#{limitdt,jdbcType=TIMESTAMP},
+		WEBURL = #{weburl,jdbcType=VARCHAR},
+		DATABASESTR = #{databasestr,jdbcType=VARCHAR}
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.lang.String">
+		update
+		base_legal_person
+		set status=2 
+		where CUSTOMERUNITCODE =
+		#{customerunitcode,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectAll" resultMap="ILegalpersonMap" resultType="list">
+		select a.* from
+		base_legal_person a order by a.CUSTOMERUNITCODE asc
+	</select>
+</mapper>

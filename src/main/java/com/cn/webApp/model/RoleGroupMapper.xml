@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IRoleGroupDao">
+	<resultMap id="RoleGroupMap" type="com.cn.webApp.model.RoleGroup">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="GROUPNAME" property="groupname" jdbcType="VARCHAR" />
+		<result column="GROUPSTATE" property="groupstate" jdbcType="CHAR" />
+		<result column="CUSTOMERUNITCODE" property="customerunitcode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="RoleGroupMapWithBLOBs" type="com.cn.webApp.model.RoleGroup"
+		extends="RoleGroupMap">
+		<result column="ROLEIDS" property="roleids" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<resultMap id="roleGroupList" type="java.util.HashMap">
+		<id column="ID" property="id" />
+		<result column="GROUPNAME" property="groupname" />
+		<result column="GROUPSTATE" property="groupstate" />
+		<result column="EMPNUM" property="empnum" />
+	</resultMap>
+	<sql id="Base_RoleGroup_List">
+		ID, GROUPNAME, GROUPSTATE, CUSTOMERUNITCODE
+	</sql>
+	<sql id="Blob_RoleGroup_List">
+		ROLEIDS
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="RoleGroupMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_RoleGroup_List" />
+		,
+		<include refid="Blob_RoleGroup_List" />
+		from base_role_group
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	
+		<select id="selectByRoleids" resultMap="RoleGroupMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_RoleGroup_List" />
+		,
+		<include refid="Blob_RoleGroup_List" />
+		from base_role_group
+		where ROLEIDS like  CONCAT('%',#{roleids,jdbcType=VARCHAR},'%')  
+	</select>
+
+	<select id="queryRoleGroupByCustomerCode" resultMap="RoleGroupMapWithBLOBs"
+		parameterType="java.lang.String" resultType="list">
+		select
+		<include refid="Base_RoleGroup_List" />
+		,
+		<include refid="Blob_RoleGroup_List" />
+		from base_role_group
+		where 1=1 and CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="verifyRoleGroupByName" resultMap="RoleGroupMapWithBLOBs"
+		parameterType="com.cn.webApp.model.RoleGroup" resultType="list">
+		select
+		<include refid="Base_RoleGroup_List" />
+		,
+		<include refid="Blob_RoleGroup_List" />
+		from base_role_group
+		<where>
+			<if test="customerunitcode != null">
+				and CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+			</if>
+			<if test="groupname != null">
+				and GROUPNAME = #{groupname,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryRoleGroups" resultMap="roleGroupList"
+		parameterType="map" resultType="list">
+		select a.groupname, a.id ,a.groupstate,count(t.id) empnum from
+		base_role_group a left join base_user t on a.id = t.roleid
+		where a.customerunitcode=#{customerunitcode,jdbcType=VARCHAR} group by
+		a.groupstate,a.id,a.groupname
+		order by ${orderName} ${descAsc}
+		<if test="startIndex != null and startIndex != ''">
+			limit ${startIndex},
+		</if>
+		<if test="startIndex == null or startIndex == ''">
+			limit 0,
+		</if>
+		<if test="endIndex != null and endIndex != ''">
+			${endIndex}
+		</if>
+	</select>
+
+	<select id="queryCount" parameterType="java.lang.String"
+		resultType="long">
+		SELECT count(*) from (select a.groupname, a.id ,a.groupstate,count(t.id)
+		empnum from base_role_group a left join base_user t on a.id = t.roleid
+		where a.customerunitcode=#{customerunitcode,jdbcType=VARCHAR} group by
+		a.groupstate,a.id,a.groupname)aa
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from base_role_group
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.RoleGroup">
+		insert into base_role_group (ID, GROUPNAME, GROUPSTATE,
+		CUSTOMERUNITCODE, ROLEIDS)
+		values (#{id,jdbcType=VARCHAR}, #{groupname,jdbcType=VARCHAR},
+		#{groupstate,jdbcType=CHAR},
+		#{customerunitcode,jdbcType=VARCHAR}, #{roleids,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.RoleGroup">
+		insert into base_role_group
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="groupname != null">
+				GROUPNAME,
+			</if>
+			<if test="groupstate != null">
+				GROUPSTATE,
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE,
+			</if>
+			<if test="roleids != null">
+				ROLEIDS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="groupname != null">
+				#{groupname,jdbcType=VARCHAR},
+			</if>
+			<if test="groupstate != null">
+				#{groupstate,jdbcType=CHAR},
+			</if>
+			<if test="customerunitcode != null">
+				#{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleids != null">
+				#{roleids,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.RoleGroup">
+		update base_role_group
+		<set>
+			<if test="groupname != null">
+				GROUPNAME = #{groupname,jdbcType=VARCHAR},
+			</if>
+			<if test="groupstate != null">
+				GROUPSTATE = #{groupstate,jdbcType=CHAR},
+			</if>
+			<if test="customerunitcode != null">
+				CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleids != null">
+				ROLEIDS = #{roleids,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cn.webApp.model.RoleGroup">
+		update base_role_group
+		set GROUPNAME = #{groupname,jdbcType=VARCHAR},
+		GROUPSTATE = #{groupstate,jdbcType=CHAR},
+		CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+		ROLEIDS = #{roleids,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.RoleGroup">
+		update base_role_group
+		set GROUPNAME = #{groupname,jdbcType=VARCHAR},
+		GROUPSTATE = #{groupstate,jdbcType=CHAR},
+		CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.ILoginlimitTypeDao" >
+  <resultMap id="LoginlimitTypeMap" type="com.cn.webApp.model.LoginlimitType" >
+    <id column="TYPEID" property="typeid" jdbcType="INTEGER" />
+    <result column="TYPENAME" property="typename" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_LoginlimitType_List" >
+    TYPEID, TYPENAME, ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="LoginlimitTypeMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_LoginlimitType_List" />
+    from base_loginlimit_type
+    where TYPEID = #{typeid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findAll" resultMap="LoginlimitTypeMap"  >
+    select 
+    <include refid="Base_LoginlimitType_List" />
+    from base_loginlimit_type
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from base_loginlimit_type
+    where TYPEID = #{typeid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.webApp.model.LoginlimitType" >
+    insert into base_loginlimit_type (TYPEID, TYPENAME, ID
+      )
+    values (#{typeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.webApp.model.LoginlimitType" >
+    insert into base_loginlimit_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="typeid != null" >
+        TYPEID,
+      </if>
+      <if test="typename != null" >
+        TYPENAME,
+      </if>
+      <if test="id != null" >
+        ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="typeid != null" >
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.LoginlimitType" >
+    update base_loginlimit_type
+    <set >
+      <if test="typename != null" >
+        TYPENAME = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        ID = #{id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TYPEID = #{typeid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.LoginlimitType" >
+    update base_loginlimit_type
+    set TYPENAME = #{typename,jdbcType=VARCHAR},
+      ID = #{id,jdbcType=VARCHAR}
+    where TYPEID = #{typeid,jdbcType=INTEGER}
+  </update>
+</mapper>

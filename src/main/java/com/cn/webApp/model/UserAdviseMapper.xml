@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IUserAdviseDao">
+	<resultMap id="UserAdviseMap" type="com.cn.webApp.model.UserAdvise">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="userid" property="userid" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="context" property="context" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="UserAdviseList">
+		id, userid, phone, context, time, status, version
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="UserAdviseMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="UserAdviseList" />
+		from app_user_advise
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 分页查询 -->
+	<select id="queryUserAdvisePage" resultMap="UserAdviseMap"
+		parameterType="map" resultType="list">
+		select
+		<include refid="UserAdviseList" />
+		from app_user_advise
+		<where>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="userid != null">
+				and userid = #{userid,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null">
+				and phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="context != null">
+				and context = #{context,jdbcType=VARCHAR}
+			</if>
+			<if test="time != null">
+				and time = #{time,jdbcType=DATE}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="version != null">
+				and version = #{version,jdbcType=INTEGER}
+			</if>
+		</where>
+		order by ${orderName} ${descAsc}
+		<if test="startIndex != null and startIndex != ''">
+			limit ${startIndex},
+		</if>
+		<if test="startIndex == null or startIndex == ''">
+			limit 0,
+		</if>
+		<if test="endIndex != null and endIndex != ''">
+			${endIndex}
+		</if>
+	</select>
+	<!-- 根据条件查询总数 -->
+	<select id="queryUserAdviseCount" parameterType="com.cn.webApp.model.UserAdvise"
+		resultType="long">
+		select count(*) from app_user_advise
+			<where>
+			<if test="id != null">
+				id = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="userid != null">
+				and userid = #{userid,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null">
+				and phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="context != null">
+				and context = #{context,jdbcType=VARCHAR}
+			</if>
+			<if test="time != null">
+				and time = #{time,jdbcType=DATE}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=VARCHAR}
+			</if>
+			<if test="version != null">
+				and version = #{version,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from app_user_advise
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.cn.webApp.model.UserAdvise">
+		insert into app_user_advise (id, userid, phone,
+		context, time, status,
+		version)
+		values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR},
+		#{context,jdbcType=VARCHAR}, #{time,jdbcType=DATE}, #{status,jdbcType=VARCHAR},
+		#{version,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.cn.webApp.model.UserAdvise">
+		insert into app_user_advise
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userid != null">
+				userid,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="context != null">
+				context,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="version != null">
+				version,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				#{context,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=DATE},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				#{version,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.UserAdvise">
+		update app_user_advise
+		<set>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				context = #{context,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=DATE},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				version = #{version,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.UserAdvise">
+		update app_user_advise
+		set userid = #{userid,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		context = #{context,jdbcType=VARCHAR},
+		time = #{time,jdbcType=DATE},
+		status = #{status,jdbcType=VARCHAR},
+		version = #{version,jdbcType=INTEGER}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

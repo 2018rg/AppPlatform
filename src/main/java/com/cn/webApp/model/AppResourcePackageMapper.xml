@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IAppResourcePackageDao" >
+  <resultMap id="AppResourcePackageMap" type="com.cn.webApp.model.AppResourcePackage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="resourcepackagename" property="resourcepackagename" jdbcType="VARCHAR" />
+    <result column="serverip" property="serverip" jdbcType="VARCHAR" />
+    <result column="serverport" property="serverport" jdbcType="VARCHAR" />
+    <result column="approot" property="approot" jdbcType="VARCHAR" />
+    <result column="described" property="described" jdbcType="VARCHAR" />
+    <result column="addtime" property="addtime" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="customerunitcode" property="customerunitcode" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_AppResourcePackage_List" >
+    id, resourcepackagename, serverip, serverport, approot, described, addtime, status, 
+    customerunitcode, version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="AppResourcePackageMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_AppResourcePackage_List" />
+    from app_resourcepackage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询全部 -->
+  <select id="queryAll" resultMap="AppResourcePackageMap" resultType="list" >
+    select 
+    <include refid="Base_AppResourcePackage_List" />
+    from app_resourcepackage  order by addtime desc
+  </select>
+  <!-- 查询符合resourcepackagename的集合 -->
+  <select id="queryByName" resultMap="AppResourcePackageMap" resultType="list" parameterType="java.lang.String">
+    select 
+    <include refid="Base_AppResourcePackage_List" />
+    from app_resourcepackage
+    where resourcepackagename= #{resourcepackagename,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from app_resourcepackage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cn.webApp.model.AppResourcePackage" >
+    insert into app_resourcepackage (id, resourcepackagename, serverip, 
+      serverport, approot, described, 
+      addtime, status, customerunitcode, 
+      version)
+    values (#{id,jdbcType=VARCHAR}, #{resourcepackagename,jdbcType=VARCHAR}, #{serverip,jdbcType=VARCHAR}, 
+      #{serverport,jdbcType=VARCHAR}, #{approot,jdbcType=VARCHAR}, #{described,jdbcType=VARCHAR}, 
+      #{addtime,jdbcType=DATE}, #{status,jdbcType=INTEGER}, #{customerunitcode,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.webApp.model.AppResourcePackage" >
+    insert into app_resourcepackage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="resourcepackagename != null" >
+        resourcepackagename,
+      </if>
+      <if test="serverip != null" >
+        serverip,
+      </if>
+      <if test="serverport != null" >
+        serverport,
+      </if>
+      <if test="approot != null" >
+        approot,
+      </if>
+      <if test="described != null" >
+        described,
+      </if>
+      <if test="addtime != null" >
+        addtime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="customerunitcode != null" >
+        customerunitcode,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="resourcepackagename != null" >
+        #{resourcepackagename,jdbcType=VARCHAR},
+      </if>
+      <if test="serverip != null" >
+        #{serverip,jdbcType=VARCHAR},
+      </if>
+      <if test="serverport != null" >
+        #{serverport,jdbcType=VARCHAR},
+      </if>
+      <if test="approot != null" >
+        #{approot,jdbcType=VARCHAR},
+      </if>
+      <if test="described != null" >
+        #{described,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        #{addtime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="customerunitcode != null" >
+        #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.AppResourcePackage" >
+    update app_resourcepackage
+    <set >
+      <if test="resourcepackagename != null" >
+        resourcepackagename = #{resourcepackagename,jdbcType=VARCHAR},
+      </if>
+      <if test="serverip != null" >
+        serverip = #{serverip,jdbcType=VARCHAR},
+      </if>
+      <if test="serverport != null" >
+        serverport = #{serverport,jdbcType=VARCHAR},
+      </if>
+      <if test="approot != null" >
+        approot = #{approot,jdbcType=VARCHAR},
+      </if>
+      <if test="described != null" >
+        described = #{described,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        addtime = #{addtime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="customerunitcode != null" >
+        customerunitcode = #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.AppResourcePackage" >
+    update app_resourcepackage
+    set resourcepackagename = #{resourcepackagename,jdbcType=VARCHAR},
+      serverip = #{serverip,jdbcType=VARCHAR},
+      serverport = #{serverport,jdbcType=VARCHAR},
+      approot = #{approot,jdbcType=VARCHAR},
+      described = #{described,jdbcType=VARCHAR},
+      addtime = #{addtime,jdbcType=DATE},
+      status = #{status,jdbcType=INTEGER},
+      customerunitcode = #{customerunitcode,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.webApp.dao.IRoleMenuDao" >
+  <resultMap id="RoleMenuMap" type="com.cn.webApp.model.RoleMenu" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ROLEID" property="roleid" jdbcType="VARCHAR" />
+    <result column="MENUID" property="menuid" jdbcType="VARCHAR" />
+    <result column="MODULEID" property="moduleid" jdbcType="VARCHAR" />
+    <result column="CUSTOMERUNITCODE" property="customerunitcode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_RoleMenu_List" >
+    ID, ROLEID, MENUID, MODULEID, CUSTOMERUNITCODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="RoleMenuMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_RoleMenu_List" />
+    from base_role_menu
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="queryMenuByRoleId" resultMap="RoleMenuMap" parameterType="java.lang.String" resultType="list">
+    select 
+    <include refid="Base_RoleMenu_List" />
+    from base_role_menu
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from base_role_menu
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByRoleId" parameterType="java.lang.String" >
+    delete from base_role_menu
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cn.webApp.model.RoleMenu" >
+    insert into base_role_menu (ID, ROLEID, MENUID, 
+      MODULEID, CUSTOMERUNITCODE)
+    values (#{id,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{menuid,jdbcType=VARCHAR}, 
+      #{moduleid,jdbcType=VARCHAR}, #{customerunitcode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.webApp.model.RoleMenu" >
+    insert into base_role_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="roleid != null" >
+        ROLEID,
+      </if>
+      <if test="menuid != null" >
+        MENUID,
+      </if>
+      <if test="moduleid != null" >
+        MODULEID,
+      </if>
+      <if test="customerunitcode != null" >
+        CUSTOMERUNITCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="menuid != null" >
+        #{menuid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleid != null" >
+        #{moduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerunitcode != null" >
+        #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.webApp.model.RoleMenu" >
+    update base_role_menu
+    <set >
+      <if test="roleid != null" >
+        ROLEID = #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="menuid != null" >
+        MENUID = #{menuid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleid != null" >
+        MODULEID = #{moduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerunitcode != null" >
+        CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.webApp.model.RoleMenu" >
+    update base_role_menu
+    set ROLEID = #{roleid,jdbcType=VARCHAR},
+      MENUID = #{menuid,jdbcType=VARCHAR},
+      MODULEID = #{moduleid,jdbcType=VARCHAR},
+      CUSTOMERUNITCODE = #{customerunitcode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
