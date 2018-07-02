@@ -14,15 +14,12 @@ import com.cn.webApp.model.LoginlimitIp;
 import com.cn.webApp.model.User;
 import com.cn.webApp.service.LoginlimitIpService;
 import com.cn.webApp.service.UserService;
-
-import ca.ex.BaseException;
-
 @Service("userservice")
 @Transactional
 public class UserServiceImpl implements UserService {
 
-	@Resource
-	private IUserDao iuserdao;
+@Resource
+private IUserDao iuserdao;
 
 	@Resource
 	private LoginlimitIpService loginlimitipservice;
@@ -136,10 +133,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getEmppwd().trim().equals(MD5Util.md5(oldPwd))) {
 			user.setEmppwd(MD5Util.md5(newPwd));
 			updateByPrimaryKeySelective(user);
-		} else {
-			throw new BaseException("原始密码不正确");
 		}
-		;
 	}
 
 }

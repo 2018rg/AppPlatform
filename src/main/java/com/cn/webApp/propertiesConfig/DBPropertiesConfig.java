@@ -10,11 +10,6 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-
-import ca.ex.BaseException;
-
-
-
 /**
  * 
  * property属性配置器，支持从数据库中，获得对应配置
@@ -120,7 +115,7 @@ PropertyPlaceholderConfigurer implements  InitializingBean{
 			return;
 		}
 		if(dataSource == null){
-			throw new BaseException("必须设置平台数据源");
+
 		}
 		Connection conn = null;
 		try{
@@ -136,7 +131,6 @@ PropertyPlaceholderConfigurer implements  InitializingBean{
 			initProperties();
 		}catch (Exception e) {
 			logger.error(e);
-			throw new BaseException("Init Platform DB Properties Failure",e);
 		}finally{
 			try{
 				conn.close();

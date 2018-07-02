@@ -39,7 +39,6 @@ import com.cn.webApp.service.LegalpersonService;
 import com.cn.webApp.service.LoginlimitIpService;
 import com.cn.webApp.service.LoginlimitTypeService;
 import com.cn.webApp.service.UserService;
-import ca.ex.BaseException;
 
 
 /**
@@ -182,7 +181,7 @@ public class LegelPersonController extends BaseController {
 		String customerunitcode = request.getParameter("customerunitcode");
 		if ("08600000000".equals(customerunitcode)) { // 特殊处理 admin 初始化数据授权基础应用包
 														// 050100 不支持再授权
-			throw new BaseException("08600000000租户不支持修改授权");
+
 		}
 		List<LegalPersonModule> ylist = legalpersonmoduleservice.getCheckModule(customerunitcode);
 		String limitdt = request.getParameter("limitdt");
@@ -326,7 +325,7 @@ public class LegelPersonController extends BaseController {
 	 * 更新界面
 	 * 
 	 * @param request
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "editUI")
@@ -354,7 +353,7 @@ public class LegelPersonController extends BaseController {
 	 * 详情界面
 	 * 
 	 * @param request
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value = "detailUI")
