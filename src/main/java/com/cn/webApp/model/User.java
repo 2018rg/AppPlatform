@@ -7,7 +7,7 @@ import java.util.Date;
  * @author rg
  * 上午10:12:16
  */
-public class User extends BaseObject{
+public class User{
     private String id;
 
     private String empcode;
